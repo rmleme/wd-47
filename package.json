@@ -1,0 +1,20 @@
+{
+  "name": "agenda-master",
+  "version": "1.0.0",
+  "description": "Exercício do Curso Caelum WD-47.",
+  "main": "agenda.js",
+  "scripts": {
+    "front": "lite-server",
+    "back": "json-server --watch db.json --port 4000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:rmleme/wd-47"
+  },
+  "author": "Rodrigo Leme",
+  "license": "MIT",
+  "dependencies": {
+    "json-server": "^0.14.2",
+    "lite-server": "^2.4.0"
+  }
+}

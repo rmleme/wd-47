@@ -1,0 +1,16 @@
+{
+  "schedule": [
+    {
+      "id": 1,
+      "name": "Leo",
+      "email": "leo@globo.com",
+      "phone": "6666-9999"
+    },
+    {
+      "name": "Leo",
+      "email": "leo@globo.com",
+      "phone": "6666-9999",
+      "id": 2
+    }
+  ]
+}
