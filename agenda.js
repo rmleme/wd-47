@@ -1,13 +1,11 @@
 (function() {
-    console.log("start app...");
-
     var endpoint = "http://localhost:4000/schedule";
 
     // Elementos da tela
     var ui = {
         fields: document.querySelectorAll(".pure-form input"),
         button: document.querySelector(".pure-button"),
-        table: document.querySelector(".pure-table")
+        table: document.querySelector(".pure-table tbody")
     };
 
 
@@ -28,8 +26,6 @@
             }
         });
 
-        console.log(errors, data);
-
         if (errors > 0) {
             document.querySelector(".error").focus();
         } else {
@@ -38,7 +34,6 @@
     };
 
     var addContact = contact => {
-        console.log(contact);
         var config = {
             method: "POST",
             body: JSON.stringify(contact),
@@ -46,8 +41,6 @@
                 "Content-Type": "application/json"
             })
         };
-
-        console.log(config);
 
         fetch(endpoint, config)
         .then(addContactSuccess)
@@ -72,20 +65,60 @@
         };
 
         fetch(endpoint, config)
-        .then(res => { return res.json() })
+        .then(resp => { return resp.json() })
         .then(getContactsSuccess)
         .catch(genericError);
     };
 
     var getContactsSuccess = contacts => {
-        console.table(contacts);
-        // TODO
+        var html = [];
+        if (contacts.length == 0) {
+            html.push(`
+                <tr>
+                    <td colspan="5">Não existem dados registrados!</td>
+                </tr>
+            `);
+        } else {
+            contacts.forEach(contact => {
+                html.push(`
+                    <tr>
+                        <td>${contact.id}</td>
+                        <td>${contact.name}</td>
+                        <td>${contact.email}</td>
+                        <td>${contact.phone}</td>
+                        <td><a href="#" data-action="delete" data-id="${contact.id}">Excluir</a></td>
+                    </tr>
+                `);
+            });
+        }
+        ui.table.innerHTML = html.join("");
     };
 
-    var removeContact = function() {};
+    var handlerAction = e => {
+        // e.currentTarget === this --> não funcionam nesta situação
+        if (e.target.dataset.action === "delete") {
+            e.preventDefault();
+            removeContact(e.target.dataset.id);
+        }
+    };
+
+    var removeContact = function(id) {
+        var config = {
+            method: "DELETE",
+            headers: new Headers({
+                "Content-Type": "application/json"
+            })
+        };
+
+        fetch(`${endpoint}/${id}`, config)
+        .then(getContacts)
+        .catch(genericError);
+    };
 
     var init = function() {
         ui.button.onclick = validateFields;
+        ui.table.onclick = handlerAction;
+        getContacts();
     }();
 
 
